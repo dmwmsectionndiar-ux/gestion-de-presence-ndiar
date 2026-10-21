@@ -93,11 +93,5 @@ Création du compte : suivre `supabase/admin_identifiant.sql`. Le mot de passe n
 - **Statistiques** : filtre par type, graphique, tableau par type, export Excel/PDF.
 - **Absences Goudi** : membres absents N (3 par défaut) GOUDI ALJUMAH consécutifs, export Excel/PDF.
 - **Membres > Importer** : fichier Excel/CSV (modèle téléchargeable), doublons ignorés.
-# Gestion-membres-presences-abdou
-# gestion-presences-membres-abdou
-# gestion-presences-membres-abdou-diop
-# gestion-presences-membres-abdou-diop
-# gestion-presences-membres-abdou-diop
-# gestion-presences-membres-abdou-diop
-# gestion-presences-membres-abdou-diop
+#
 # gestion-de-presence-ndiartidiane
