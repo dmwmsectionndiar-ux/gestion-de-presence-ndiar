@@ -96,3 +96,4 @@ Création du compte : suivre `supabase/admin_identifiant.sql`. Le mot de passe n
 #
 # gestion-de-presence-ndiartidiane
 # gestion-de-presence-ndiar
+# gestion-de-presence-ndiar
