@@ -1,0 +1,185 @@
+import { FormEvent, useState } from "react";
+import { LockKeyhole, Mail, LogIn, KeyRound } from "lucide-react";
+import { supabase } from "../lib/supabase";
+
+// Le compte est identifié par un « identifiant » (ex. admin143).
+// En interne, Supabase exige un e-mail : on ajoute simplement un domaine fixe.
+const LOGIN_DOMAIN = import.meta.env.VITE_LOGIN_DOMAIN || "mj-membres.app";
+const toAuthEmail = (id: string) => {
+  const v = id.trim().toLowerCase();
+  return v.includes("@") ? v : `${v}@${LOGIN_DOMAIN}`;
+};
+
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+
+  async function submit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    setMessage("");
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: toAuthEmail(email),
+        password,
+      });
+       if (error) {
+        console.error("Erreur connexion :", error.message);
+        const m = error.message.toLowerCase();
+        if (m.includes("email not confirmed")) {
+          setError("Compte non confirmé dans Supabase.");
+        } else if (m.includes("invalid login credentials")) {
+          setError("Identifiant ou mot de passe incorrect.");
+        } else {
+          setError(`Erreur technique : ${error.message}`);
+        }
+        return;
+      }
+      // Recharge l'application après une connexion réussie.
+      window.location.replace("/");
+    } catch {
+      setError("Impossible de se connecter. Vérifie ta connexion Internet.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function forgotPassword() {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    setError("");
+    setMessage("");
+
+    if (!normalizedEmail) {
+      setError("Saisis ton identifiant ou ton adresse e-mail avant de continuer.");
+      return;
+    }
+
+    if (!normalizedEmail.includes("@")) {
+      setError(
+        "Avec un identifiant, la réinitialisation par e-mail n'est pas possible. Saisis l'adresse e-mail réelle du compte, ou demande à l'administrateur de changer ton mot de passe dans Supabase."
+      );
+      return;
+    }
+
+    setResetLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(
+        normalizedEmail,
+        {
+          redirectTo: `${window.location.origin}/reset-password`,
+        }
+      );
+
+      if (error) {
+        setError(
+          "Impossible d'envoyer l'e-mail. Vérifie la configuration Supabase."
+        );
+        return;
+      }
+
+      setMessage(
+        "Si cette adresse correspond à un compte, un e-mail de réinitialisation a été envoyé. Vérifie aussi les courriers indésirables."
+      );
+    } catch {
+      setError("Une erreur est survenue. Réessaie dans quelques instants.");
+    } finally {
+      setResetLoading(false);
+    }
+  }
+
+  return (
+    <div className="login-screen">
+      <form className="login-card" onSubmit={submit}>
+        <img className="login-logo" src="/logo.png" alt="EVEIL" />
+
+                <h1>Espace membres</h1>
+        <p style={{ margin: "8px 0 6px" }}>Moustarchidine Junior</p>
+        <div
+          style={{
+            textAlign: "center",
+            margin: "0 0 6px",
+            fontSize: 13,
+            fontWeight: 600,
+            lineHeight: 1.65,
+            color: "#0e5a42",
+          }}
+        >
+          <div>Section NGOUFAT 1</div>
+          <div>Conseil THIOLOM 2</div>
+          <div>Comité LOUGA</div>
+        </div>
+
+        <label htmlFor="login-email">Identifiant</label>
+        <div className="input-icon">
+          <Mail size={18} />
+          <input
+            id="login-email"
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="username"
+            required
+            placeholder="ex. votre email" autoCapitalize="none" autoCorrect="off"
+          />
+        </div>
+
+        <label htmlFor="login-password">Mot de passe</label>
+        <div className="input-icon">
+          <LockKeyhole size={18} />
+          <input
+            id="login-password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+            placeholder="Ton mot de passe"
+          />
+        </div>
+
+        {error && (
+          <div className="error-box" role="alert">
+            {error}
+          </div>
+        )}
+
+        {message && (
+          <div className="success-box" role="status">
+            {message}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          className="primary full"
+          disabled={loading || resetLoading}
+        >
+          <LogIn size={18} />
+          {loading ? "Connexion…" : "Se connecter"}
+        </button>
+
+        <button
+          type="button"
+          className="forgot-password"
+          onClick={forgotPassword}
+          disabled={loading || resetLoading}
+        >
+          <KeyRound size={16} />
+          {resetLoading
+            ? "Envoi en cours…"
+            : "Mot de passe oublié ?"}
+        </button>
+
+        
+      </form>
+    </div>
+  );
+}
