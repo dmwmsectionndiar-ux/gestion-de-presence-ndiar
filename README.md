@@ -95,3 +95,4 @@ Création du compte : suivre `supabase/admin_identifiant.sql`. Le mot de passe n
 - **Membres > Importer** : fichier Excel/CSV (modèle téléchargeable), doublons ignorés.
 #
 # gestion-de-presence-ndiartidiane
+# gestion-de-presence-ndiar
