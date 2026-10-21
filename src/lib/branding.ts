@@ -12,9 +12,9 @@ export type Branding = {
 // Valeurs affichées tant que la base n'a pas répondu (ou si branding.sql n'a pas été lancé)
 export const DEFAULT_BRANDING: Branding = {
   organization_name: "Moustarchidine Junior",
-  section: "Section NGOUFAT 1",
-  conseil: "Conseil THIOLOM 2",
-  comite: "Comité LOUGA",
+  section: "Section NDIAR ",
+  conseil: "Conseil NDAME LO",
+  comite: "Comité THIES",
   logo_url: "",
 };
 

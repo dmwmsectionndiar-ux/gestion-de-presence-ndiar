@@ -112,9 +112,9 @@ export default function Login() {
             color: "#0e5a42",
           }}
         >
-          <div>Section NGOUFAT 1</div>
-          <div>Conseil THIOLOM 2</div>
-          <div>Comité LOUGA</div>
+          <div>Section NDIAR </div>
+          <div>Conseil NDAME LO</div>
+          <div>Comité THIES</div>
         </div>
 
         <label htmlFor="login-email">Identifiant</label>
