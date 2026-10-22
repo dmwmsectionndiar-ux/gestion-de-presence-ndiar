@@ -11,7 +11,7 @@ import { TYPE_ORDER } from "../lib/stats";
 // Statut automatique : une activité passe en "terminée" 5 h après sa fin
 // (ou 5 h après son début si aucune heure de fin n'est renseignée).
 const AUTO_CLOSE_HOURS = 5;
-const PUBLIC_SITE_URL = "https://gestion-presences-membres-abdou-diop.netlify.app";
+const PUBLIC_SITE_URL = "https://gestion-de-presence-ndiar.netlify.app";
 const closeTime = (start: string, end: string | null) => new Date(end || start).getTime() + AUTO_CLOSE_HOURS * 3600 * 1000;
 const effectiveStatus = (a: ActivityType) =>
   a.status === "annulée" ? "annulée"
@@ -110,3 +110,6 @@ export default function Activities({ canDelete = false }: { canDelete?: boolean 
     {recurOpen&&<RecurringActivities types={types} onClose={()=>setRecurOpen(false)} onChanged={load}/>}
   </>;
 }
+
+
+
