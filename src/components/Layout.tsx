@@ -5,6 +5,7 @@ import {
   LogIn, LogOut, UserX, Menu, Settings, Shield, Users, UserCog, X
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import Footer from "./Footer";
 import type { Session } from "@supabase/supabase-js";
 
 const publicLinks = [
@@ -83,6 +84,7 @@ export default function Layout({ children, session }: { children: ReactNode; ses
           <div className="topbar-user">{name}</div>
         </header>
         <div className="content">{children}</div>
+        <Footer />
       </main>
     </div>
   );

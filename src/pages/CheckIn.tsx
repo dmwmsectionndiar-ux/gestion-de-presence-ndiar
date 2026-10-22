@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { CheckCircle2, Search } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import OrgHeader from "../components/OrgHeader";
+import Footer from "../components/Footer";
 
 type State = "ok" | "early" | "late" | "cancelled";
 type Info = { found: boolean; name?: string; start?: string; state?: State };
@@ -13,6 +14,23 @@ const CLOSED_MESSAGE: Record<string, string> = {
   late: "Le pointage est fermé : cette activité est terminée.",
   cancelled: "Cette activité est annulée.",
 };
+
+// Lecture à haute voix (synthèse vocale du navigateur).
+function speak(text: string) {
+  try {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "fr-FR";
+    u.rate = 0.95;
+    u.volume = 1;
+    const fr = window.speechSynthesis.getVoices().find((v) => v.lang.toLowerCase().startsWith("fr"));
+    if (fr) u.voice = fr;
+    window.speechSynthesis.speak(u);
+  } catch {
+    /* la voix est un bonus : on ignore les erreurs */
+  }
+}
 
 export default function CheckIn() {
   const { token = "" } = useParams();
@@ -84,6 +102,14 @@ export default function CheckIn() {
     }
 
     setLoading(true);
+    // Active la voix pendant le clic (nécessaire sur iPhone/Safari).
+    try {
+      const warm = new SpeechSynthesisUtterance(" ");
+      warm.volume = 0;
+      window.speechSynthesis.speak(warm);
+    } catch {
+      /* ignore */
+    }
     try {
       const { data, error: rpcError } = await supabase.rpc("checkin", {
         p_token: token,
@@ -99,6 +125,9 @@ export default function CheckIn() {
       const result = data as { ok: boolean; message: string };
       if (result.ok) {
         setDone(result.message);
+        if (chosen) {
+          speak(`${chosen.first_name} ${chosen.last_name}. Présence enregistrée.`);
+        }
       } else {
         setError(result.message);
         setCode("");
@@ -223,6 +252,7 @@ export default function CheckIn() {
         {!done && error && (!info?.found || info.state !== "ok") && (
           <div className="error-box" role="alert">{error}</div>
         )}
+        <Footer />
       </div>
     </div>
   );
