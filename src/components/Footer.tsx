@@ -1,7 +1,9 @@
 const Footer = () => {
   return (
-    <footer className="w-full border-t py-4 text-center text-sm text-gray-500">
-      <p>&copy; {new Date().getFullYear()} Gestion de Présence</p>
+    <footer className="site-footer">
+      <div>Dahiratoul Moustarchidina Wal Moustarchidaty</div>
+      <div>Moustarchidine Junior • Abdou Diop</div>
+      <div>© 2026 Tous droits réservés</div>
     </footer>
   );
 };

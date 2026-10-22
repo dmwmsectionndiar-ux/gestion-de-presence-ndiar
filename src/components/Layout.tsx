@@ -77,13 +77,16 @@ export default function Layout({ children, session }: { children: ReactNode; ses
         </div>
       </aside>
       {open && <div className="overlay" onClick={() => setOpen(false)} />}
-      <main className="main">
+      <main
+        className="main"
+        style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      >
         <header className="topbar">
           <button className="icon-btn mobile-only" onClick={() => setOpen(true)}><Menu size={22}/></button>
           <div className="topbar-title">Moustarchidine Junior</div>
           <div className="topbar-user">{name}</div>
         </header>
-        <div className="content">{children}</div>
+        <div className="content" style={{ flex: 1 }}>{children}</div>
         <Footer />
       </main>
     </div>
